@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+# vi: set ts=2 sw=2 :
+
+require 'json'
+
+done = IO.read("Tube Labyrinths - Done.tsv").lines
+header = done.shift.chomp.split("\t")
+done = done.map do |l|
+  header.zip(l.chomp.split("\t")).to_h
+end
+p done
+
+stops_by_id = {}
+Dir.glob("*-StopPoints.json").each do |f|
+  JSON.parse(IO.read f).each do |stop_point|
+    stops_by_id[ stop_point["id"] ] = stop_point
+  end
+end
+
+out = stops_by_id.values.map do |stop_point|
+
+  visit = done.find {|v| v["ACTO code"] == stop_point["id"] }
+
+  [
+    stop_point["id"],
+    stop_point["commonName"],
+    stop_point["lat"].to_s + "," + stop_point["lon"].to_s,
+    stop_point["lineModeGroups"].find {|g| g["modeName"]=="tube"}["lineIdentifier"].sort.join(","),
+    visit ? "Visited" : "Not visited",
+    visit ? visit["Sequence"] : nil,
+    visit ? visit["Date"] : nil,
+    visit ? visit["Number"] : nil,
+    visit ? visit["Location"] : nil,
+  ]
+end
+
+p out
+
+require 'csv'
+CSV.open("out.csv", "wb") do |csv|
+  csv << [
+    "id",
+    "common name",
+    "latitude and longitude",
+    "tube lines",
+    "visited",
+    "visit sequence",
+    "visit date",
+    "labyrinth number",
+    "labyrinth location",
+  ]
+  out.each {|row| csv << row}
+end
