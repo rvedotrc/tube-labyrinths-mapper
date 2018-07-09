@@ -1,4 +1,4 @@
-http://data.tfl.gov.uk/tfl/syndication/feeds/stations.kml?app_id=358dba34&app_key=9bf307f6e57127d7591bb9c3c377ce90
+http://data.tfl.gov.uk/tfl/syndication/feeds/stations.kml?app_id=xxxxxxxx&app_key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 http://cloud.tfl.gov.uk/TrackerNet/LineStatus
 
 https://api.tfl.gov.uk/Line/Meta/Modes
